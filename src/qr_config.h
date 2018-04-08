@@ -6,8 +6,11 @@ class DmkqConfig{
     ~DmkqConfig();
 
     /*
-     *
+     *Description
+     *		Load config file.
      */
+    int LoadConfig(const char* pConfFile);
+
 };
 
 #endif

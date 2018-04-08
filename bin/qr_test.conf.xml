@@ -12,7 +12,7 @@ tmstamp13:time stamp,Millisecond precision
 <conf>
     <implicitpreset rsakey="config/rsa.cert.key"></implicitpreset>
 
-    <scheme>
+    <scheme name="smkp">
         <variable name="code" ui="editbox">
             <preset>12345678</preset>
             <preset>kij78772</preset>
@@ -25,6 +25,6 @@ tmstamp13:time stamp,Millisecond precision
 
         <implicitpreset deskey="config/des.key.txt"></implicitpreset>
 
-        <formula>f() = .f_RSA($code + $tmstamp10 + .f_DES(deskey), "config/rsa.cert.txt")</formula>
+        <formula>f() = .f_RSA($code + .$tmstamp10 + .f_DES(deskey), "config/rsa.cert.txt")</formula>
     </scheme>
 </conf>
