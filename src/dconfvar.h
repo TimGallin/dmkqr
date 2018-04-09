@@ -21,7 +21,6 @@ class DconfVar : public DconfMeta{
 
 	void SetVal(const char* pVal);
 
-
 	/*
 	 * Get&set Ui
 	 */
