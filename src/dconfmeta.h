@@ -1,9 +1,10 @@
 #ifndef DMKQR_HEADER_DMKCONFOBJ
 #define DMKQR_HEADER_DMKCONFOBJ
 
-
+#include <string>
 
 class DconfMeta{
+public:
 	DconfMeta();
 	virtual	~DconfMeta();
 	

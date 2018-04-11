@@ -3,16 +3,14 @@
 
 #include "dconfmeta.h"
 
-#define MAX_VAR_PRESETS;
-
 class DconfVar : public DconfMeta{
 	DconfVar();
 	~DconfVar();
 
-	enum {
+	enum UiFace{
 		ui_editbox=0,
 		ui_dropbox
-	}UiFace;
+	};
 
 	/*
 	 * Get&Set value.
@@ -27,11 +25,6 @@ class DconfVar : public DconfMeta{
 	void SetUi(const UiFace& ui);
 
 	UiFace GetUi();
-
-	/*
-	 * Presets
-	 */
-	std::string PresetsVal[MAX_VAR_PRESETS];
 
 private:
 	UiFace _uiface;

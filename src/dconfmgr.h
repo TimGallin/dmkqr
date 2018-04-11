@@ -2,8 +2,8 @@
 #define DMKQR_HEADER_DMKQRCONF
 
 #include "dconfmeta.h"
-
 class DconfManager : public DconfMeta{
+public:
 	DconfManager();
 	~DconfManager();
 
