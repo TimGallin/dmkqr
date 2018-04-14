@@ -4,7 +4,9 @@
 #include "dconfmeta.h"
 
 class DconfVar : public DconfMeta{
+public:
 	DconfVar();
+	DconfVar(tinyxml2::XMLElement *pVariableEle);
 	~DconfVar();
 
 	enum UiFace{
@@ -32,9 +34,16 @@ class DconfVar : public DconfMeta{
      */
     int Initial(tinyxml2::XMLElement *pVariableEle);
 
+
+	/*
+	 *Set&Get Sibling var.
+	 */
+	void SetSibling(DconfVar* pNext);
+
+	DconfVar* GetSibling();
 private:
 	UiFace _uiface;
-
+	DconfVar* _pNext;
 };
 
 #endif

@@ -3,10 +3,13 @@
 
 #include "tinyxml2/tinyxml2.h"
 
+#include "dconfscheme.h"
+#include "dconfpreset.h"
+
 using namespace std;
 using namespace tinyxml2;
 
-DconfManager::DconfManager()
+DconfManager::DconfManager():_pFirstScheme(NULL)
 {
 }
 
@@ -31,8 +34,54 @@ int DconfManager::Load(const char *file){
         return -1;
     }
 
-    XMLElement* pEle = NULL;
+    XMLElement* pPresetEle = doc.FirstChildElement(XML_ROOT)->FirstChildElement(XML_IMPLICIT_PRESET);
+    DconfPreset* pPreset = pPresetEle == NULL ? NULL : new DconfPreset(pPresetEle);
 
-    pEle = doc.FirstChildElement("conf")->FirstChildElement("scheme");
+    XMLElement* pSchemeEle = doc.FirstChildElement(XML_ROOT)->FirstChildElement(XML_SCHEME);
 
+    DconfScheme* pTransitScheme = NULL;
+
+    while(pSchemeEle){
+        DconfScheme* pScheme = new DconfScheme();
+        pScheme->SetImplPreset(pPreset);
+        pScheme->Initial(pSchemeEle);
+
+        if(pTransitScheme != NULL){
+            pTransitScheme->SetSibling(pScheme);
+        }
+
+        if(_pFirstScheme != NULL){
+            _pFirstScheme = pScheme;
+        }
+
+        pTransitScheme = pScheme;
+
+        pSchemeEle = pSchemeEle->NextSiblingElement("scheme");
+    }
+}
+
+
+/*
+ * Run scheme formula via name.
+ */
+std::string DconfManager::RunScheme(const char* pName){
+    if(_pFirstScheme == NULL){
+        return "";
+    }
+
+    DconfScheme* pTarget = NULL;
+    pTarget = _pFirstScheme;
+    while(pTarget){
+        if(strcmp(pTarget->GetName(), pName) == 0){
+            break;
+        }
+
+        pTarget = pTarget->GetSibling();
+    }
+
+    if(pTarget == NULL){
+        return "";
+    }
+
+    return pTarget->Run();
 }

@@ -17,7 +17,9 @@ public:
 	/*
 	 * Set implicit preset
 	 */
-	virtual int SetImplPreset(DconfPreset *pPreset);
+	int SetImplPreset(DconfPreset* pPreset);
+
+	DconfPreset* GetImplPreset();
 	
 private:
 	std::string _sName;

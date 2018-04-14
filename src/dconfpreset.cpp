@@ -1,4 +1,5 @@
 #include "dmkqr.h"
+#include "dconfmeta.h"
 #include "dconfpreset.h"
 
 using namespace std;
@@ -49,7 +50,7 @@ std::string &DconfPreset::GetDesKey(){
  */
 int DconfPreset::Initial(tinyxml2::XMLElement *pPresetElement){
     if(pPresetElement == NULL){
-        return -1;
+        return DMKQR_FAILED;
     }
 
     auto valfilter = [](const char* x){
@@ -61,4 +62,28 @@ int DconfPreset::Initial(tinyxml2::XMLElement *pPresetElement){
     _sAesKey = valfilter(pPresetElement->Attribute(IMPL_PRESET_AESKEY));
     _sDesKey = valfilter(pPresetElement->Attribute(IMPL_PRESET_DESKEY));
     
+    return DMKQR_SUCCESS;
+}
+
+
+/*
+ *Set preset vars.
+ */
+void DconfPreset::InitVars(tinyxml2::XMLElement *pPresetElement){
+    if(pPresetElement == NULL || strcmp(pPresetElement->Name(),XML_SCHEME_VAR_PRESET) != 0 ){
+        return;
+    }
+
+    const char* pVariable = pPresetElement->GetText();
+
+    if(pVariable != NULL){
+        _vecVars.push_back(pVariable);
+    }
+
+    pPresetElement = pPresetElement->NextSiblingElement();
+    if(pPresetElement == NULL){
+        return;
+    }
+
+    InitVars(pPresetElement);
 }

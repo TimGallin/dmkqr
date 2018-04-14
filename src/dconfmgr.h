@@ -1,8 +1,7 @@
 #ifndef DMKQR_HEADER_DMKQRCONF
 #define DMKQR_HEADER_DMKQRCONF
 
-#include "dconfmeta.h"
-class DconfManager : public DconfMeta{
+class DconfManager{
 public:
 	DconfManager();
 	~DconfManager();
@@ -14,9 +13,11 @@ public:
 
 
 	/*
-	 * Get scheme via name.
+	 * Run scheme formula via name.
 	 */
-	int GetScheme(const char* pName);
+	std::string RunScheme(const char* pName);
+private:
+	DconfScheme* _pFirstScheme;
 };
 
 #endif
