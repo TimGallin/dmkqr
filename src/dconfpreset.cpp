@@ -8,6 +8,9 @@ DconfPreset::DconfPreset(){
 
 }
 
+DconfPreset::DconfPreset(tinyxml2::XMLElement *pPresetElement){
+    Initial(pPresetElement);
+}
 
 DconfPreset::~DconfPreset(){
 
@@ -45,6 +48,10 @@ std::string &DconfPreset::GetDesKey(){
  *Extrac information from xml node.
  */
 int DconfPreset::Initial(tinyxml2::XMLElement *pPresetElement){
+    if(pPresetElement == NULL){
+        return -1;
+    }
+
     auto valfilter = [](const char* x){
         return x == NULL ? "" : x;
     };

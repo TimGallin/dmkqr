@@ -10,13 +10,13 @@ public:
     ~DconfScheme();
 
     /*
-     *
+     *Initial shceme
      */
-    int Initial();
+    int Initial(tinyxml2::XMLElement *pSchemeEle);
 
 
     /*
-     *
+     *Run formula
      */
     std::string Run();
 private:

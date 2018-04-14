@@ -26,6 +26,12 @@ class DconfVar : public DconfMeta{
 
 	UiFace GetUi();
 
+
+	/*
+     *Initial shceme variable
+     */
+    int Initial(tinyxml2::XMLElement *pVariableEle);
+
 private:
 	UiFace _uiface;
 

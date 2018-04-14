@@ -1,13 +1,12 @@
 #ifndef DMKQR_HEADER_DCONFPRESET
 #define DMKQR_HEADER_DCONFPRESET
 
-#include "dconfmeta.h"
-
 #define MAX_VAR_PRESETS 5
 
-class DconfPreset : public DconfMeta{
+class DconfPreset{
 public:
     DconfPreset();
+    DconfPreset(tinyxml2::XMLElement *pPresetElement);
     ~DconfPreset();
 
     /*
@@ -36,6 +35,18 @@ public:
      *Presets value
      */
     std::string sVals[MAX_VAR_PRESETS];
+
+
+    /*
+     *Extrac information from xml node.
+     */
+    int Initial(tinyxml2::XMLElement *pPresetElement);
+
+private:
+    std::string _sRsaPub;
+    std::string _sRsaPri;
+    std::string _sAesKey;
+    std::string _sDesKey;
 };
 
 #endif
