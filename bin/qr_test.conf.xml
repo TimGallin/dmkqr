@@ -23,8 +23,10 @@ tmstamp13:time stamp,Millisecond precision
             <preset>asdd44fgt</preset>
         </variable>
 
+        <const name="const_day">monday</const>
+
         <implpreset deskey="config/des.key.txt"></implicitpreset>
 
-        <formula>.f_RSA($code + .$tmstamp10) + .f_DES(test123)</formula>
+        <formula>.f_RSA(.$code + .$_tmstamp10) + .$const_day + .f_DES(test123)</formula>
     </scheme>
 </conf>

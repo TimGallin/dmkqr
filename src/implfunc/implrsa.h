@@ -8,7 +8,7 @@ public:
     ImplRSA();
     ~ImplRSA();
 
-    virtual std::string Run(const std::string& sSource); 
+    virtual std::string Run(ImplFunc *pInnerFunc); 
 
     void SetPubKey(const std::string& sCertFile);
     void SetPriKey(const std::string& sCertFile);

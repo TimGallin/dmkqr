@@ -24,5 +24,9 @@
 
 #define DMKQR_SUCCESS 0
 #define DMKQR_FAILED -1
+#define DMKQR_PARSE_ERROR -2
+
+#define dmkqr_str2_cmp(m, c0, c1, c2)                                       \
+    m[0] == c0 && m[1] == c1
 
 #endif

@@ -1,14 +1,18 @@
 #include "../dmkqr.h"
 #include "implconstant.h"
 
-ImplConstan::ImplConstan(){
+ExplConstan::ExplConstan(){
 
 }
 
-ImplConstan::~ImplConstan(){
+ExplConstan::~ExplConstan(){
 
 }
 
-std::string ImplConstan::Run(const std::string &sSource){
-    return sSource;
+std::string ExplConstan::Run(){
+    return _sValue;
+}
+
+void ExplConstan::SetValue(const std::string& sValue){
+    _sValue = sValue;
 }

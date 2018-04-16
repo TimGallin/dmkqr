@@ -1,14 +1,19 @@
 #ifndef DMKQR_HEADER_IMPL_CONSTANT
 #define DMKQR_HEADER_IMPL_CONSTANT
 
-#include "implfunc.h"
+#include "FormulaExe.h"
 
-class ImplConstan : public ImplFunc{
+//Explicit constant
+class ExplConstan : public FormulaExe, public FormulaExe::FormulaDelegate{
 public:
-    ImplConstan();
-    ~ImplConstan();
+    ExplConstan();
+    ~ExplConstan();
 
-    virtual std::string Run(const std::string& sSource);
+    virtual std::string Run();
+
+    void SetValue(const std::string& sValue);
+private:
+    std::string _sValue;
 };
 
 #endif

@@ -22,15 +22,13 @@ private:
 
 
     typedef struct _tagFormulaChain{
-        std::string sType;  //operator or impl-function 
-        std::string sParam; //parameter of impl-function or operator(+,*,/)
-        void* pTarget;      //impl-function pointer
+        int nType;  //0:operator +   1:impl-function 
+        ImplFunc* pTarget;      //impl-function pointer
 
         _tagFormulaChain* pNext;
 
         _tagFormulaChain(){
-            sType = "";
-            sParam = "";
+            nType = -1;
             pTarget = NULL;
             pNext = NULL;
         }
@@ -38,7 +36,13 @@ private:
         
     }FormulaChain;
 
-    FormulaChain _formulaChain;
+
+    /*
+     *Parse formula
+     */
+    int Parse(const char* pFormula, const int nLength);
+
+    FormulaChain _formulaTop;
 };
 
 #endif
