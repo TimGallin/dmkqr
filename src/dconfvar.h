@@ -2,12 +2,16 @@
 #define DMKQR_HEADER_DCONFVAR
 
 #include "dconfmeta.h"
+#include "implfunc/formulaexe.h"
 
-class DconfVar : public DconfMeta{
+class DconfVar : public DconfMeta, public FormulaExe::FormulaDelegate{
 public:
 	DconfVar();
 	DconfVar(tinyxml2::XMLElement *pVariableEle);
 	~DconfVar();
+
+	virtual std::string Run() override;
+
 
 	enum UiFace{
 		ui_editbox=0,

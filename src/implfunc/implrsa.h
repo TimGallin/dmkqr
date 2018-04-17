@@ -1,14 +1,14 @@
 #ifndef DMKQR_HEADER_IMPL_RSA
 #define DMKQR_HEADER_IMPL_RSA
 
-#include "implfunc.h"
+#include "formulaexe.h"
 
-class ImplRSA : public ImplFunc{
+class ImplRSA : public FormulaExe{
 public:
     ImplRSA();
     ~ImplRSA();
 
-    virtual std::string Run(ImplFunc *pInnerFunc); 
+    virtual std::string Run() override; 
 
     void SetPubKey(const std::string& sCertFile);
     void SetPriKey(const std::string& sCertFile);

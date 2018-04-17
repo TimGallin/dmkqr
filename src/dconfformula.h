@@ -3,46 +3,27 @@
 
 #include "dconfmeta.h"
 #include "tinyxml2/tinyxml2.h"
-#include "implfunc/implfunc.h"
+#include "implfunc/formulaexe.h"
 
 #include <map>
-class DconfFormula : public DconfMeta{
+class DconfFormula : public DconfMeta, public FormulaExe{
 public:
     DconfFormula();
     ~DconfFormula();
 
     int Initial(tinyxml2::XMLElement* pFormulaEle);
 
+    virtual std::string Run() override;
 private:
-
     /*
-     *Get implfunc via func name
+     *Parse formula.pFormula is a sequence of char with a NULL-terminator.
      */
-    ImplFunc* FactoryImplfunc(const std::string& sName);
+    int Parse(const char* pFormula, FormulaExe* pParent);
 
 
-    typedef struct _tagFormulaChain{
-        int nType;  //0:operator +   1:impl-function 
-        ImplFunc* pTarget;      //impl-function pointer
+    void Implpushback(const char *pSubformula);
 
-        _tagFormulaChain* pNext;
-
-        _tagFormulaChain(){
-            nType = -1;
-            pTarget = NULL;
-            pNext = NULL;
-        }
-
-        
-    }FormulaChain;
-
-
-    /*
-     *Parse formula
-     */
-    int Parse(const char* pFormula, const int nLength);
-
-    FormulaChain _formulaTop;
+    void Explpushback(const char *pSubformula);
 };
 
 #endif

@@ -1,5 +1,5 @@
 #include "../dmkqr.h"
-#include "implconstant.h"
+#include "explconstant.h"
 
 ExplConstan::ExplConstan(){
 

@@ -2,27 +2,27 @@
 #define DMKQR_HEADER_IMPLFUNC
 
 #include <string>
-#include <deque>
+#include <queue>
 class FormulaExe{
 public:
     FormulaExe();
-    virtual ~FormulaExe();
+    
+    /*
+    *Every derived class implement this method.
+    *The constant is also one of the ImplFuncs, its output is equal to input.
+    */
+    virtual std::string Run() = 0;
 
-    class FormulaDelegate{
-         /*
-         *Every derived class implement this method.
-         *The constant is also one of the ImplFuncs, its output is equal to input.
-         */
-        virtual std::string Run() = 0;
-    };
-   
+    std::string RunSubs();
 
+    void pushback(FormulaExe* pSunFunc);
 
-    void pushback(FormulaDelegate* pSunFunc);
+    FormulaExe* LastFormula();
+protected:
+   virtual ~FormulaExe();
 
-    std::string RunSub();
 private:
-    std::deque<FormulaDelegate*> _Subfuncs;
+    std::queue<FormulaExe*> _Subfuncs;
     
 };
 

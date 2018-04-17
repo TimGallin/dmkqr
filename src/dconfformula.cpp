@@ -1,8 +1,9 @@
 #include "dmkqr.h"
 #include "dconfformula.h"
 #include "dconfpreset.h"
+
+#include "implfunc/explconstant.h"
 #include "implfunc/implrsa.h"
-#include "implfunc/implconstant.h"
 
 using namespace tinyxml2;
 using namespace std;
@@ -25,36 +26,11 @@ int DconfFormula::Initial(tinyxml2::XMLElement *pFormulaEle){
 }
 
 
-/*
- *Get implfunc via func name
- */
-ImplFunc* DconfFormula::FactoryImplfunc(const std::string& sName){
-    ImplFunc* pTarget = NULL;
-
-    if(sName == "RSA"){
-        if(GetImplPreset() == NULL){
-            return NULL;
-        }
-        
-        ImplRSA* pImplRsa = new ImplRSA;
-        pImplRsa->SetPubKey(GetImplPreset()->GetRsaPubKey());
-        pImplRsa->SetPriKey(GetImplPreset()->GetRsaPriKey());
-
-        pTarget = static_cast<ImplFunc*>(pImplRsa);
-    }else{
-    ImplConstan* pImplConstan = new ImplConstan;
-    pImplConstan->SetValue(sName);
-    pTarget = static_cast<ImplFunc*>(pImplConstan);
-    }
-
-    return pTarget;
-}
-
 
 /*
  *Parse formula
  */
-int DconfFormula::Parse(const char* pFormula, const int nLength){
+int DconfFormula::Parse(const char* pFormula, FormulaExe* pParent){
     if(pFormula == NULL){
         return DMKQR_FAILED;
     }
@@ -73,18 +49,11 @@ int DconfFormula::Parse(const char* pFormula, const int nLength){
         sw_space
     } state = sw_start;
 
-    FormulaChain *pFChain = &_formulaTop;
-    auto fAddChain = [&pFChain,this](const string& sName, int type){
-        FormulaChain* pFuncPart = new FormulaChain();
-        pFuncPart->pTarget = FactoryImplfunc(sName);
-        pFChain->pNext = pFuncPart;
-        pFChain = pFuncPart;
-    };
-
     const char* pRecord = pFormula;
     const char* p = pRecord;
-    while(nLength){
-        char ch = *p;
+    char ch = *p;
+
+    while(ch != '\0'){
         switch(state){
             case sw_start:
                 if(ch == '('){
@@ -116,9 +85,14 @@ int DconfFormula::Parse(const char* pFormula, const int nLength){
                 }
                 
                 if(ch == '('){
-                    fAddChain(string(pRecord,p-pRecord), 1);
+                    Implpushback(pRecord);
+                    state = sw_parenthesis_open;
                 }
-                
+            
+            case sw_parenthesis_open:
+                Parse(p+1, pParent->LastFormula());
+            case sw_parenthesis_close:
+                break;
             default:
                 break;
 
@@ -126,5 +100,29 @@ int DconfFormula::Parse(const char* pFormula, const int nLength){
 
         }
     }
+    
+    return DMKQR_SUCCESS;
+}
 
+
+void DconfFormula::Implpushback(const char *pSubformula){
+    if(pSubformula == NULL){
+        return;
+    }
+
+    if(dmkqr_str3_cmp(pSubformula,'R','S','A')){
+        pushback(new ImplRSA);
+    }
+    else if(dmkqr_str3_cmp(pSubformula,'D','E','S')){
+        pushback(new ImplRSA);
+    }
+    else if(dmkqr_str3_cmp(pSubformula,'A','E','S')){
+        pushback(new ImplRSA);
+    }
+
+    return;
+}
+
+std::string DconfFormula::Run(){
+    return RunSubs();
 }
