@@ -17,7 +17,7 @@ public:
 
     void pushback(FormulaExe* pSunFunc);
 
-    FormulaExe* LastFormula();
+    FormulaExe* LastFormula() const;
 protected:
    virtual ~FormulaExe();
 

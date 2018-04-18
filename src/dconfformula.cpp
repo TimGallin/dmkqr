@@ -36,7 +36,7 @@ int DconfFormula::Parse(const char* pFormula, FormulaExe* pParent){
     }
 
     enum{
-        sw_start,
+        sw_loop,
         sw_const,
         sw_dot,
         sw_dot_func,
@@ -47,7 +47,7 @@ int DconfFormula::Parse(const char* pFormula, FormulaExe* pParent){
         sw_parenthesis_close,
         sw_plus,
         sw_space
-    } state = sw_start;
+    } state = sw_loop;
 
     const char* pRecord = pFormula;
     const char* p = pRecord;
@@ -55,7 +55,7 @@ int DconfFormula::Parse(const char* pFormula, FormulaExe* pParent){
 
     while(ch != '\0'){
         switch(state){
-            case sw_start:
+            case sw_loop:
                 if(ch == '('){
                     state = sw_parenthesis_open;
                 }
@@ -63,6 +63,9 @@ int DconfFormula::Parse(const char* pFormula, FormulaExe* pParent){
                     state = sw_dot;
                 }else if(ch == '$'){
                     state = sw_variable;
+                }
+                else if(ch == ')'){
+                    state = sw_parenthesis_close;
                 }
 
                 state = sw_const;
@@ -85,7 +88,7 @@ int DconfFormula::Parse(const char* pFormula, FormulaExe* pParent){
                 }
                 
                 if(ch == '('){
-                    Implpushback(pRecord);
+                    pParent->pushback(FormulaFactory(pRecord));
                     state = sw_parenthesis_open;
                 }
             
@@ -105,24 +108,25 @@ int DconfFormula::Parse(const char* pFormula, FormulaExe* pParent){
 }
 
 
-void DconfFormula::Implpushback(const char *pSubformula){
-    if(pSubformula == NULL){
-        return;
-    }
-
-    if(dmkqr_str3_cmp(pSubformula,'R','S','A')){
-        pushback(new ImplRSA);
-    }
-    else if(dmkqr_str3_cmp(pSubformula,'D','E','S')){
-        pushback(new ImplRSA);
-    }
-    else if(dmkqr_str3_cmp(pSubformula,'A','E','S')){
-        pushback(new ImplRSA);
-    }
-
-    return;
-}
 
 std::string DconfFormula::Run(){
     return RunSubs();
+}
+
+FormulaExe* DconfFormula::FormulaFactory(const char *pFormula){
+    if(pFormula == NULL){
+        return NULL;
+    }
+
+    if(dmkqr_str3_cmp(pFormula,'R','S','A')){
+        return(new ImplRSA);
+    }
+    else if(dmkqr_str3_cmp(pFormula,'D','E','S')){
+        return(new ImplRSA);
+    }
+    else if(dmkqr_str3_cmp(pFormula,'A','E','S')){
+        return(new ImplRSA);
+    }
+
+    return NULL;
 }

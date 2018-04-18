@@ -8,10 +8,14 @@ public:
     ImplRSA();
     ~ImplRSA();
 
-    virtual std::string Run() override; 
+    std::string Run() override; 
 
     void SetPubKey(const std::string& sCertFile);
     void SetPriKey(const std::string& sCertFile);
+
+private:
+    std::string _sPubkeyFile;
+    std::string _sPrikeyFile;
 };
 
 #endif

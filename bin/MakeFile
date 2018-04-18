@@ -1,0 +1,13 @@
+VPATH = E:/gitcode/dmkqr/src : ../src/implfunc : ../src/tinyxml2 
+
+all : dmkqr
+
+dmkqr : dmkqr.o
+	CXX -o dmkqr.exe dmkqr.o
+
+dmkqr.o : dmkqr.h
+
+clean :
+	-del *.obj
+
+.PHONY : clean

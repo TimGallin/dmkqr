@@ -22,7 +22,7 @@ void FormulaExe::pushback(FormulaExe *pSunFunc){
     _Subfuncs.push(pSunFunc);
 }
 
-FormulaExe* FormulaExe::LastFormula(){
+FormulaExe* FormulaExe::LastFormula() const{
     if(_Subfuncs.empty()){
         return NULL;
     }

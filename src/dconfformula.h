@@ -20,10 +20,7 @@ private:
      */
     int Parse(const char* pFormula, FormulaExe* pParent);
 
-
-    void Implpushback(const char *pSubformula);
-
-    void Explpushback(const char *pSubformula);
+    FormulaExe* FormulaFactory(const char *pFormula);
 };
 
 #endif

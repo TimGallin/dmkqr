@@ -9,7 +9,7 @@ public:
     ExplConstan();
     ~ExplConstan();
 
-    virtual std::string Run() override;
+    std::string Run() override;
 
     void SetValue(const std::string& sValue);
 private:
