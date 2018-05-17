@@ -42,6 +42,11 @@ public:
      */
     void InitVars(tinyxml2::XMLElement *pPresetElement);
 
+	/*
+	Access vector preset.
+	*/
+	std::vector<std::string>& GetPresetVars();
+
 private:
     std::string _sRsaPub;
     std::string _sRsaPri;

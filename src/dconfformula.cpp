@@ -54,6 +54,8 @@ int DconfFormula::Parse(const char* pFormula, FormulaExe* pParent){
     const char* p = pRecord;
     char ch = *p;
 
+	string sDotValue = "";
+
     while(ch != '\0'){
         switch(state){
             case sw_loop:
@@ -72,8 +74,12 @@ int DconfFormula::Parse(const char* pFormula, FormulaExe* pParent){
                     state = sw_parenthesis_close;
 					break;
                 }
+				else if (ch == '+'){
+					state = sw_loop;
+					break;
+				}
 
-                state = sw_const;
+				state = sw_loop;
                 break;
             //Implicit variable.timestamp etc.
             case sw_dot:
@@ -108,23 +114,24 @@ int DconfFormula::Parse(const char* pFormula, FormulaExe* pParent){
 			}
 
 			case sw_dot_var:{
-				if ((ch > 'Z' || ch < 'A') && (ch <'0' || ch>'9')){
+				if ((ch > 'Z' || ch < 'A') && (ch <'0' || ch>'9') && (ch <'a' || ch>'z')){
 					return DMKQR_PARSE_ERROR;
 				}
 
-				FormulaExe* pFormula = FormulaFactory(p);
+				FormulaExe* pFormula = DotVarFactory(p);
 				pParent->pushback(pFormula);
 				p += pFormula->GetFormulaName().length();
 
-				if (*p == '('){
-					state = sw_parenthesis_open;
-				}
+				state = sw_loop;
+
 				break;
 			}
                 
 
 			case sw_parenthesis_open:{
-				Parse(p, pParent->LastFormula());
+				if (Parse(p, pParent->LastFormula()) != DMKQR_SUCCESS){
+					return DMKQR_FAILED;
+				}
 			}
                 
             case sw_parenthesis_close:

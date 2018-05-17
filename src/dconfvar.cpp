@@ -99,5 +99,9 @@ DconfVar* DconfVar::GetSibling(){
 
 
 std::string DconfVar::Run(){
-	return "";
+	return GetImplPreset()->GetPresetVars()[0];
+}
+
+std::string DconfVar::GetFormulaName(){
+	return GetName();
 }

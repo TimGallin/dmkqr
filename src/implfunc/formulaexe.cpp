@@ -15,6 +15,7 @@ std::string FormulaExe::RunSubs(){
     string sResult = "";
     while(!_Subfuncs.empty()){
         sResult += _Subfuncs.front()->Run();
+		_Subfuncs.pop();
     }
 	return sResult;
 }

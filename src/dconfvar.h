@@ -44,7 +44,7 @@ public:
 	 */
 	void SetSibling(DconfVar* pNext);
 
-	std::string GetFormulaName() override{ return "var"; };
+	std::string GetFormulaName() override;
 
 	DconfVar* GetSibling();
 private:

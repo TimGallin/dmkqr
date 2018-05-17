@@ -43,12 +43,6 @@ int DconfScheme::Initial(tinyxml2::XMLElement *pSchemeEle)
         SetImplPreset(pSchemeSet);
     }
 
-    //Formula
-	tinyxml2::XMLElement *pFormula = pSchemeEle->FirstChildElement(XML_SCHEME_VAR_FORMULA);
-	if (pFormula){
-		_formula = new DconfFormula(this);
-		_formula->Initial(pFormula);
-	}
     //Variables
     tinyxml2::XMLElement *pVariableEle = pSchemeEle->FirstChildElement(XML_SCHEME_VAR);
 	
@@ -59,7 +53,7 @@ int DconfScheme::Initial(tinyxml2::XMLElement *pSchemeEle)
             pTransitVar->SetSibling(pVariable);    
         }
         
-        if(_pFirstVar != NULL){
+        if(_pFirstVar == NULL){
             _pFirstVar = pVariable;
         }
         
@@ -67,6 +61,13 @@ int DconfScheme::Initial(tinyxml2::XMLElement *pSchemeEle)
 
          pVariableEle = pVariableEle->NextSiblingElement(XML_SCHEME_VAR);
     }
+
+	//Formula
+	tinyxml2::XMLElement *pFormula = pSchemeEle->FirstChildElement(XML_SCHEME_VAR_FORMULA);
+	if (pFormula){
+		_formula = new DconfFormula(this);
+		_formula->Initial(pFormula);
+	}
 
     return DMKQR_SUCCESS;
 }
@@ -105,7 +106,8 @@ FormulaExe* DconfScheme::GetVariable(const char* pName){
     pTarget = _pFirstVar;
 
     while(pTarget != NULL){
-        if(strcmp(pTarget->GetName(), pName) == 0){
+		if (strstr(pName, pTarget->GetName())){
+        //if(strcmp(pTarget->GetName(), pName) == 0){
 			return pTarget;
         }
 

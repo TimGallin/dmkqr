@@ -87,3 +87,11 @@ void DconfPreset::InitVars(tinyxml2::XMLElement *pPresetElement){
 
     InitVars(pPresetElement);
 }
+
+
+/*
+Access vector preset.
+*/
+std::vector<std::string>& DconfPreset::GetPresetVars(){
+	return _vecVars;
+}
