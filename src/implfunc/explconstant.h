@@ -12,6 +12,8 @@ public:
     std::string Run() override;
 
     void SetValue(const std::string& sValue);
+
+	std::string GetFormulaName() override;
 private:
     std::string _sValue;
 };

@@ -4,7 +4,7 @@
 #include "dconfmeta.h"
 #include "implfunc/formulaexe.h"
 
-class DconfVar : public DconfMeta, public FormulaExe::FormulaDelegate{
+class DconfVar : public DconfMeta, public FormulaExe{
 public:
 	DconfVar();
 	DconfVar(tinyxml2::XMLElement *pVariableEle);
@@ -43,6 +43,8 @@ public:
 	 *Set&Get Sibling var.
 	 */
 	void SetSibling(DconfVar* pNext);
+
+	std::string GetFormulaName() override{ return "var"; };
 
 	DconfVar* GetSibling();
 private:

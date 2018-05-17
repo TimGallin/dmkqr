@@ -1,14 +1,14 @@
 #include "dmkqr.h"
 #include "dconfformula.h"
 #include "dconfpreset.h"
-
+#include "dconfscheme.h"
 #include "implfunc/explconstant.h"
 #include "implfunc/implrsa.h"
 
 using namespace tinyxml2;
 using namespace std;
 
-DconfFormula::DconfFormula(){
+DconfFormula::DconfFormula(DconfMeta* pParent) :_pParent(pParent){
 
 }
 
@@ -21,6 +21,7 @@ int DconfFormula::Initial(tinyxml2::XMLElement *pFormulaEle){
         return DMKQR_FAILED;
     }
 
+	Parse(pFormulaEle->GetText(), this);
 
     return DMKQR_SUCCESS;
 }
@@ -58,50 +59,81 @@ int DconfFormula::Parse(const char* pFormula, FormulaExe* pParent){
             case sw_loop:
                 if(ch == '('){
                     state = sw_parenthesis_open;
+					break;
                 }
                 else if(ch == '.'){
                     state = sw_dot;
+					break;
                 }else if(ch == '$'){
                     state = sw_variable;
+					break;
                 }
                 else if(ch == ')'){
                     state = sw_parenthesis_close;
+					break;
                 }
 
                 state = sw_const;
                 break;
             //Implicit variable.timestamp etc.
             case sw_dot:
-                if(dmkqr_str2_cmp(p,'_','f','')){
+				if (dmkqr_str2_cmp(p, 'f', '_', '')){
+					++p;
                     state = sw_dot_func;
-                }else if(dmkqr_str2_cmp(p,'_','$','')){
+					break;
+				}
+				else if (dmkqr_str2_cmp(p, '$', '_', '')){
+					++p;
                     state = sw_dot_var;
+					break;
                 }else{
                     return DMKQR_PARSE_ERROR;
                 }
                 p+=1;
                 pRecord = p;
 
-            case sw_dot_func:
-                if((ch > 'Z' || ch < 'A') && (ch <'0' || ch>'9')){
-                    return DMKQR_PARSE_ERROR;
-                }
+			case sw_dot_func:{
+				if ((ch > 'Z' || ch < 'A') && (ch <'0' || ch>'9')){
+					return DMKQR_PARSE_ERROR;
+				}
+
+				FormulaExe* pFormula = FormulaFactory(p);
+				pParent->pushback(pFormula);
+				p += pFormula->GetFormulaName().length();
+
+				if (*p == '('){
+					state = sw_parenthesis_open;
+				}
+				break;
+			}
+
+			case sw_dot_var:{
+				if ((ch > 'Z' || ch < 'A') && (ch <'0' || ch>'9')){
+					return DMKQR_PARSE_ERROR;
+				}
+
+				FormulaExe* pFormula = FormulaFactory(p);
+				pParent->pushback(pFormula);
+				p += pFormula->GetFormulaName().length();
+
+				if (*p == '('){
+					state = sw_parenthesis_open;
+				}
+				break;
+			}
                 
-                if(ch == '('){
-                    pParent->pushback(FormulaFactory(pRecord));
-                    state = sw_parenthesis_open;
-                }
-            
-            case sw_parenthesis_open:
-                Parse(p+1, pParent->LastFormula());
+
+			case sw_parenthesis_open:{
+				Parse(p, pParent->LastFormula());
+			}
+                
             case sw_parenthesis_close:
                 break;
             default:
                 break;
-
-        ++p;
-
         }
+		++p;
+		ch = *p;
     }
     
     return DMKQR_SUCCESS;
@@ -129,4 +161,10 @@ FormulaExe* DconfFormula::FormulaFactory(const char *pFormula){
     }
 
     return NULL;
+}
+
+
+FormulaExe* DconfFormula::DotVarFactory(const char *pDotvar){
+	DconfScheme* pParentScheme = static_cast<DconfScheme*>(_pParent);
+	return pParentScheme->GetVariable(pDotvar);
 }

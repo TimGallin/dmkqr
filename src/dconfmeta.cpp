@@ -28,7 +28,7 @@ void DconfMeta::SetName(const char* pName){
 /*
  * Set implicit preset
  */
-int DconfMeta::SetImplPreset(DconfPreset* pPreset){
+void DconfMeta::SetImplPreset(DconfPreset* pPreset){
     _pPreset = pPreset;
 }
 

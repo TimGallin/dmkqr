@@ -26,3 +26,7 @@ void ImplRSA::SetPubKey(const string& sCertFile){
 void ImplRSA::SetPriKey(const std::string& sCertFile){
     _sPrikeyFile = sCertFile;
 }
+
+std::string ImplRSA::GetFormulaName(){
+	return "RSA";
+}

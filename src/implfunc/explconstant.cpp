@@ -16,3 +16,7 @@ std::string ExplConstan::Run(){
 void ExplConstan::SetValue(const std::string& sValue){
     _sValue = sValue;
 }
+
+std::string ExplConstan::GetFormulaName(){
+	return "";
+}

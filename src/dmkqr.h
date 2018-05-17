@@ -7,7 +7,6 @@
 
 #include "tinyxml2/tinyxml2.h"
 
-
 #define XML_ROOT "conf"
 
 #define IMPL_PRESET_RASPUB "rsa_pubkey"

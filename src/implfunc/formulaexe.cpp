@@ -16,6 +16,7 @@ std::string FormulaExe::RunSubs(){
     while(!_Subfuncs.empty()){
         sResult += _Subfuncs.front()->Run();
     }
+	return sResult;
 }
 
 void FormulaExe::pushback(FormulaExe *pSunFunc){
@@ -29,3 +30,5 @@ FormulaExe* FormulaExe::LastFormula() const{
 
     return _Subfuncs.back();
 }
+
+

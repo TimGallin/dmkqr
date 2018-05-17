@@ -10,6 +10,8 @@ public:
 
     std::string Run() override; 
 
+	std::string GetFormulaName() override;
+
     void SetPubKey(const std::string& sCertFile);
     void SetPriKey(const std::string& sCertFile);
 

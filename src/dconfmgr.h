@@ -1,6 +1,9 @@
 #ifndef DMKQR_HEADER_DMKQRCONF
 #define DMKQR_HEADER_DMKQRCONF
 
+#include "dconfscheme.h"
+#include "dconfpreset.h"
+
 class DconfManager{
 public:
 	DconfManager();

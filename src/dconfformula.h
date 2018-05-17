@@ -8,12 +8,14 @@
 #include <map>
 class DconfFormula : public DconfMeta, public FormulaExe{
 public:
-    DconfFormula();
+	DconfFormula(DconfMeta* pParent);
     ~DconfFormula();
 
     int Initial(tinyxml2::XMLElement* pFormulaEle);
 
     virtual std::string Run() override;
+
+	std::string GetFormulaName() override{ return "scheme"; };
 private:
     /*
      *Parse formula.pFormula is a sequence of char with a NULL-terminator.
@@ -21,6 +23,10 @@ private:
     int Parse(const char* pFormula, FormulaExe* pParent);
 
     FormulaExe* FormulaFactory(const char *pFormula);
+
+	FormulaExe* DotVarFactory(const char *pDotvar);
+	//
+	DconfMeta* _pParent;
 };
 
 #endif

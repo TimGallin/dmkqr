@@ -3,8 +3,7 @@
 
 #include "tinyxml2/tinyxml2.h"
 
-#include "dconfscheme.h"
-#include "dconfpreset.h"
+
 
 using namespace std;
 using namespace tinyxml2;
@@ -21,7 +20,7 @@ DconfManager::~DconfManager()
  * Load config file.
  */
 int DconfManager::Load(const char *file){
-    FILE* pFile = fopen(file, "r");
+    FILE* pFile = fopen(file, "rb");
     if(pFile == NULL){
         return -1;
     }
@@ -29,7 +28,7 @@ int DconfManager::Load(const char *file){
     XMLDocument doc;
     XMLError xmlerr;
     xmlerr = doc.LoadFile(pFile);
-
+	
     if(xmlerr != XML_SUCCESS){
         return -1;
     }
@@ -50,7 +49,7 @@ int DconfManager::Load(const char *file){
             pTransitScheme->SetSibling(pScheme);
         }
 
-        if(_pFirstScheme != NULL){
+        if(_pFirstScheme == NULL){
             _pFirstScheme = pScheme;
         }
 
@@ -58,6 +57,8 @@ int DconfManager::Load(const char *file){
 
         pSchemeEle = pSchemeEle->NextSiblingElement("scheme");
     }
+
+	return 0;
 }
 
 

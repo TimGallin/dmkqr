@@ -1,9 +1,8 @@
 #ifndef DMKQR_HEADER_DCONFPRESET
 #define DMKQR_HEADER_DCONFPRESET
 
-#include "dconfmeta.h"
 
-class DconfPreset : public DconfMeta{
+class DconfPreset{
 public:
     DconfPreset();
     DconfPreset(tinyxml2::XMLElement *pPresetElement);

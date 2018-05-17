@@ -1,12 +1,12 @@
 #include "dmkqr.h"
 
-#include "dconfpreset.h"
 #include "dconfscheme.h"
-#include "dconfvar.h"
+
+
 using namespace std;
 using namespace tinyxml2;
 
-DconfScheme::DconfScheme() : _pFirstVar(NULL)
+DconfScheme::DconfScheme() : _pFirstVar(NULL), _formula(NULL)
 {
 }
 
@@ -44,10 +44,14 @@ int DconfScheme::Initial(tinyxml2::XMLElement *pSchemeEle)
     }
 
     //Formula
-
+	tinyxml2::XMLElement *pFormula = pSchemeEle->FirstChildElement(XML_SCHEME_VAR_FORMULA);
+	if (pFormula){
+		_formula = new DconfFormula(this);
+		_formula->Initial(pFormula);
+	}
     //Variables
     tinyxml2::XMLElement *pVariableEle = pSchemeEle->FirstChildElement(XML_SCHEME_VAR);
-
+	
     DconfVar *pTransitVar = NULL;
     while (pVariableEle != NULL){
         DconfVar *pVariable = new DconfVar(pVariableEle);
@@ -72,7 +76,8 @@ int DconfScheme::Initial(tinyxml2::XMLElement *pSchemeEle)
  */
 std::string DconfScheme::Run()
 {
-}
+	return _formula->Run();
+ }
 
 
 
@@ -91,9 +96,9 @@ DconfScheme* DconfScheme::GetSibling(){
 /*
  *Get variable's value via its name.
  */
-std::string DconfScheme::GetVarsValue(const char* pName){
+FormulaExe* DconfScheme::GetVariable(const char* pName){
     if(pName == NULL){
-        return "";
+		return NULL;
     }
 
     DconfVar* pTarget = NULL;
@@ -101,15 +106,11 @@ std::string DconfScheme::GetVarsValue(const char* pName){
 
     while(pTarget != NULL){
         if(strcmp(pTarget->GetName(), pName) == 0){
-            break;
+			return pTarget;
         }
 
         pTarget = pTarget->GetSibling();
     }
 
-    if(pTarget == NULL){
-        return "";
-    }
-
-    return pTarget->GetVal();
+	return NULL;
 }

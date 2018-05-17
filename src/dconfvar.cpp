@@ -20,6 +20,7 @@ DconfVar::~DconfVar()
  */
 const char *DconfVar::GetVal()
 {
+	return NULL;
 }
 
 void DconfVar::SetVal(const char *pVal)
@@ -75,7 +76,7 @@ int DconfVar::Initial(tinyxml2::XMLElement *pVariableEle)
         return DMKQR_SUCCESS;
     }
 
-    while (pPresetEle != NULL)
+    if (pPresetEle != NULL)
     {
         DconfPreset *pPresets = new DconfPreset();
         pPresets->InitVars(pPresetEle);
@@ -94,4 +95,9 @@ void DconfVar::SetSibling(DconfVar *pNext){
 
 DconfVar* DconfVar::GetSibling(){
     return _pNext;
+}
+
+
+std::string DconfVar::Run(){
+	return "";
 }

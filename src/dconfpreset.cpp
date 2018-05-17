@@ -21,28 +21,28 @@ DconfPreset::~DconfPreset(){
  *Get Ras public key
  */
 std::string &DconfPreset::GetRsaPubKey(){
-
+	return _sRsaPub;
 }
 
 /*
  *Get Ras private key
  */
 std::string &DconfPreset::GetRsaPriKey(){
-
+	return _sRsaPri;
 }
 
 /*
  *Get AES encrypt key
  */
 std::string &DconfPreset::GetAesKey(){
-
+	return _sAesKey;
 }
 
 /*
  *Get DES encrypt key
  */
 std::string &DconfPreset::GetDesKey(){
-
+	return _sDesKey;
 }
 
 /*

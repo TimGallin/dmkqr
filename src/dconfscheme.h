@@ -2,6 +2,9 @@
 #define DMKQR_HEADER_DCONFSCHEME
 
 #include "dconfmeta.h"
+#include "implfunc\FormulaExe.h"
+#include "dconfvar.h"
+#include "dconfformula.h"
 #include <string>
 
 class DconfScheme : public DconfMeta{
@@ -28,13 +31,13 @@ public:
     DconfScheme* GetSibling();
 
     /*
-     *Get variable's value via its name.
+     *Get variable via its name.
      */
-    std::string GetVarsValue(const char* pName);
+	FormulaExe* GetVariable(const char* pName);
 private:
     std::string _sFormula;
     DconfVar* _pFirstVar;
-
+	DconfFormula* _formula;
     DconfScheme* _pNextScheme;
 };
 

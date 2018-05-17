@@ -1,6 +1,8 @@
 #ifndef DMKQR_HEADER_DMKCONFOBJ
 #define DMKQR_HEADER_DMKCONFOBJ
 
+#include "dconfpreset.h"
+
 class DconfMeta{
 public:
 	DconfMeta();
@@ -17,7 +19,7 @@ public:
 	/*
 	 * Set implicit preset
 	 */
-	int SetImplPreset(DconfPreset* pPreset);
+	void SetImplPreset(DconfPreset* pPreset);
 
 	DconfPreset* GetImplPreset();
 	
