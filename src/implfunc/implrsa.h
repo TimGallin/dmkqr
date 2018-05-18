@@ -5,7 +5,7 @@
 
 class ImplRSA : public FormulaExe{
 public:
-    ImplRSA();
+	ImplRSA(const std::string& fPubKey, const std::string& fPriKey);
     ~ImplRSA();
 
     std::string Run() override; 

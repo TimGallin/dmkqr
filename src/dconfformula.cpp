@@ -4,6 +4,7 @@
 #include "dconfscheme.h"
 #include "implfunc/explconstant.h"
 #include "implfunc/implrsa.h"
+#include "implfunc\impltime.h"
 
 using namespace tinyxml2;
 using namespace std;
@@ -158,14 +159,21 @@ FormulaExe* DconfFormula::FormulaFactory(const char *pFormula){
     }
 
     if(dmkqr_str3_cmp(pFormula,'R','S','A')){
-        return(new ImplRSA);
+		_ASSERT(GetImplPreset() == NULL);
+		return(new ImplRSA(GetImplPreset()->GetRsaPubKey(), GetImplPreset()->GetRsaPriKey()));
     }
     else if(dmkqr_str3_cmp(pFormula,'D','E','S')){
-        return(new ImplRSA);
+		return NULL;
     }
     else if(dmkqr_str3_cmp(pFormula,'A','E','S')){
-        return(new ImplRSA);
+		return NULL;
     }
+	else if (dmkqr_str4_cmp(pFormula, 'T', 'M', '1', '0')){
+		return(new ImplTime(ImplTime::Precision::Seconds));
+	}
+	else if (dmkqr_str4_cmp(pFormula, 'T', 'M', '1', '3')){
+		return(new ImplTime(ImplTime::Precision::MiliSeconds));
+	}
 
     return NULL;
 }

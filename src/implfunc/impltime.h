@@ -1,5 +1,5 @@
-#ifndef DMKQR_HEADER_IMPL_RSA
-#define DMKQR_HEADER_IMPL_RSA
+#ifndef DMKQR_HEADER_IMPL_TIME
+#define DMKQR_HEADER_IMPL_TIME
 
 
 #include "formulaexe.h"

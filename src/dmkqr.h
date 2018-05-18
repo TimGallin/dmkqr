@@ -20,6 +20,12 @@
 #define XML_SCHEME_VAR_PRESET "preset"
 #define XML_SCHEME_VAR_FORMULA "formula"
 
+#define FORMULA_EXECUTER_RSA "RSA"
+#define FORMULA_EXECUTER_DES "DES"
+#define FORMULA_EXECUTER_AES "AES"
+#define FORMULA_EXECUTER_TMSEC "TM10"
+#define FORMULA_EXECUTER_TMMILISEC "TM13"
+
 
 #define DMKQR_SUCCESS 0
 #define DMKQR_FAILED -1
@@ -30,5 +36,12 @@
 
 #define dmkqr_str3_cmp(m, c0, c1, c2)\
     m[0] == c0 && m[1] == c1 && m[2] == c2
+
+
+#define dmkqr_str3_cmp(m, c0, c1, c2)\
+    m[0] == c0 && m[1] == c1 && m[2] == c2
+
+#define dmkqr_str4_cmp(m, c0, c1, c2, c3)\
+    m[0] == c0 && m[1] == c1 && m[2] == c2 && m[3] == c3
 
 #endif
