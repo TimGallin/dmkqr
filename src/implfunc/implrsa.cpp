@@ -5,10 +5,17 @@
 #include <crypto\rsa.h>
 #include <crypto\files.h>
 #include <crypto\osrng.h>
+#include <crypto\base64.h>
 using namespace std;
 
-ImplRSA::ImplRSA(const std::string& fPubKey, const std::string& fPriKey) :_sPubkeyFile(fPubKey), _sPrikeyFile(fPriKey){
+static string PRI_HEADER = "-----BEGIN RSA PRIVATE KEY-----";
+static string PRI_FOOTER = "-----END RSA PRIVATE KEY-----";
 
+static string PUB_HEADER = "-----BEGIN PUBLIC KEY-----";
+static string PUB_FOOTER = "-----END PUBLIC KEY-----";
+
+ImplRSA::ImplRSA(const std::string& fPubKey, const std::string& fPriKey){
+	SetPubKey(fPubKey);
 }
 
 ImplRSA::~ImplRSA(){
@@ -17,42 +24,93 @@ ImplRSA::~ImplRSA(){
 
 string ImplRSA::Run(){
     string sPlain = RunSubs();
-	sPlain = "ashflskdjfsdfiuoiwer-9438539045,test";
-    //Do rsa encrypt(sResult) ...
-	CryptoPP::RSA::PublicKey rsaPublic;
-	CryptoPP::FileSource input2(_sPubkeyFile.c_str(), true);
-	rsaPublic.BERDecode(input2);
-
-	CryptoPP::RSA::PrivateKey rsaPrivate;
-	CryptoPP::FileSource input(_sPrikeyFile.c_str(), true);
-	rsaPrivate.BERDecode(input);
-
 	string sCipher = "";
-	CryptoPP::AutoSeededRandomPool rng;
-	if (rsaPublic.Validate(rng, 3)){
-		CryptoPP::RSAES_PKCS1v15_Encryptor rpe(rsaPublic);
-		CryptoPP::StringSource ss1(sPlain, true, new CryptoPP::PK_EncryptorFilter(rng, rpe, new CryptoPP::StringSink(sCipher))); // StringSource
+
+	//Do encrypt here.
+	size_t pos1, pos2;
+	pos1 = _sPubkey.find(PRI_HEADER);
+	if (pos1 == string::npos)
+		throw runtime_error("PEM header not found");
+
+	pos2 = _sPubkey.find(PRI_FOOTER, pos1 + 1);
+	if (pos2 == string::npos)
+		throw runtime_error("PEM footer not found");
+
+	// Start position and length
+	pos1 = pos1 + PRI_HEADER.length();
+	pos2 = pos2 - pos1;
+	string keystr = _sPubkey.substr(pos1, pos2);
+
+	// Base64 decode, place in a ByteQueue    
+	CryptoPP::ByteQueue queue;
+	CryptoPP::Base64Decoder decoder;
+
+	decoder.Attach(new CryptoPP::Redirector(queue));
+	decoder.Put((const CryptoPP::byte*)keystr.data(), keystr.length());
+	decoder.MessageEnd();
+
+	// Write to file for inspection
+	CryptoPP::FileSink fs("decoded-key.der");
+	queue.CopyTo(fs);
+	fs.MessageEnd();
+
+
+    //Do rsa encrypt
+	try{
+
+		string RSA_PRIV_KEY;
+		CryptoPP::RSA::PrivateKey  rsaPri;
+		rsaPri.BERDecodePrivateKey(queue, false /*paramsPresent*/, queue.MaxRetrievable());
+
+		// BERDecodePrivateKey is a void function. Here's the only check
+		// we have regarding the DER bytes consumed.
+		_ASSERT(queue.IsEmpty());
+
+		CryptoPP::AutoSeededRandomPool prng;
+		bool valid = rsaPri.Validate(prng, 3);
+		if (!valid){
+			cerr << "RSA private key is not valid" << endl;
+			_ASSERT("RSA private key is not valid");
+		}
+			
+
+		CryptoPP::RSAES_PKCS1v15_Encryptor rpe(rsaPri);
+		CryptoPP::StringSource ss1(sPlain, true, new CryptoPP::PK_EncryptorFilter(prng, rpe, new CryptoPP::StringSink(sCipher))); // StringSource
+		
 	}
-	else if (rsaPrivate.Validate(rng, 3))
-	{
-		CryptoPP::RSAES_PKCS1v15_Encryptor rpe(rsaPrivate);
-		CryptoPP::StringSource ss1(sPlain, true, new CryptoPP::PK_EncryptorFilter(rng, rpe, new CryptoPP::StringSink(sCipher))); // StringSource
-	}
-	else{
-		throw runtime_error("Invalid rsa key.");
+	catch (const CryptoPP::Exception& ex){
+		cerr << ex.what() << endl;
 	}
 
 	return sCipher;
 }
 
 void ImplRSA::SetPubKey(const string& sCertFile){
-    _sPubkeyFile = sCertFile;
+	ReadCert(_sPubkey, sCertFile);
 }
 
 void ImplRSA::SetPriKey(const std::string& sCertFile){
-    _sPrikeyFile = sCertFile;
+	ReadCert(_sPrikey, sCertFile);
 }
 
 std::string ImplRSA::GetFormulaName(){
 	return FORMULA_EXECUTER_RSA;
+}
+
+
+void ImplRSA::ReadCert(std::string& sCert, const std::string& sFile){
+	FILE* pFile = NULL;
+	int nOpen = fopen_s(&pFile, sFile.c_str(), "r");
+	if (nOpen != 0){
+		return;
+	}
+
+	fseek(pFile, 0, SEEK_END);
+	int nSize = ftell(pFile);
+	sCert.resize(nSize);
+	fseek(pFile, 0, SEEK_SET);
+
+	nOpen = fread_s((char*)sCert.c_str(), nSize, sizeof(char), nSize, pFile);
+
+	fclose(pFile);
 }

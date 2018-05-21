@@ -16,8 +16,11 @@ public:
     void SetPriKey(const std::string& sCertFile);
 
 private:
-    std::string _sPubkeyFile;
-    std::string _sPrikeyFile;
+	void ReadCert(std::string& sCert, const std::string& sFile);
+
+
+    std::string _sPubkey;
+    std::string _sPrikey;
 };
 
 #endif

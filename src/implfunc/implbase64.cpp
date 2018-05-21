@@ -21,7 +21,7 @@ string ImplBase64::Run(){
 	string sResult = "";
 
 	CryptoPP::ByteQueue bq(2048);
-	bq.Put2((const CryptoPP::byte*)sPlain.c_str(), sPlain.length(), 0, false);
+	bq.Put2((const CryptoPP::byte*)sPlain.c_str(), sPlain.size(), 0, false);
 
 	CryptoPP::Base64Encoder encoder;
 	bq.CopyTo(encoder);
@@ -38,6 +38,6 @@ string ImplBase64::Run(){
 }
 
 std::string ImplBase64::GetFormulaName(){
-	return "base64";
+	return "Base64";
 }
 

@@ -1,5 +1,5 @@
-#ifndef DMKQR_HEADER_IMPL_RSA
-#define DMKQR_HEADER_IMPL_RSA
+#ifndef DMKQR_HEADER_IMPL_BASE64
+#define DMKQR_HEADER_IMPL_BASE64
 
 #include "formulaexe.h"
 

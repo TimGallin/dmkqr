@@ -44,4 +44,9 @@
 #define dmkqr_str4_cmp(m, c0, c1, c2, c3)\
     m[0] == c0 && m[1] == c1 && m[2] == c2 && m[3] == c3
 
+
+
+#define dmkqr_str6_cmp(m, c0, c1, c2, c3, c4, c5)\
+    m[0] == c0 && m[1] == c1 && m[2] == c2 && m[3] == c3 && m[4] == c4 && m[5] == c5
+
 #endif

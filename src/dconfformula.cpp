@@ -5,7 +5,7 @@
 #include "implfunc/explconstant.h"
 #include "implfunc/implrsa.h"
 #include "implfunc\impltime.h"
-
+#include "implfunc\implbase64.h"
 using namespace tinyxml2;
 using namespace std;
 
@@ -173,6 +173,9 @@ FormulaExe* DconfFormula::FormulaFactory(const char *pFormula){
 	}
 	else if (dmkqr_str4_cmp(pFormula, 'T', 'M', '1', '3')){
 		return(new ImplTime(ImplTime::Precision::MiliSeconds));
+	}
+	else if (dmkqr_str6_cmp(pFormula, 'B', 'a', 's', 'e', '6', '4')){
+		return(new ImplBase64);
 	}
 
     return NULL;
