@@ -25,7 +25,7 @@ int DconfManager::Load(const char *file){
         return -1;
     }
 
-    XMLDocument doc;
+	tinyxml2::XMLDocument doc;
     XMLError xmlerr;
     xmlerr = doc.LoadFile(pFile);
 	

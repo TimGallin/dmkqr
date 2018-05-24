@@ -1,22 +1,26 @@
 #include "../dmkqr.h"
-#include "explconstant.h"
+#include "ExplConstant.h"
 
-ExplConstan::ExplConstan(){
-
-}
-
-ExplConstan::~ExplConstan(){
+ExplConstant::ExplConstant(){
 
 }
 
-std::string ExplConstan::Run(){
+ExplConstant::ExplConstant(const std::string& sValue) :_sValue(sValue) {
+
+}
+
+ExplConstant::~ExplConstant(){
+
+}
+
+std::string ExplConstant::Run(){
     return _sValue;
 }
 
-void ExplConstan::SetValue(const std::string& sValue){
+void ExplConstant::SetValue(const std::string& sValue){
     _sValue = sValue;
 }
 
-std::string ExplConstan::GetFormulaName(){
-	return "";
+std::string ExplConstant::GetFormulaName(){
+	return _sValue;
 }

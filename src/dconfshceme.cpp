@@ -66,6 +66,7 @@ int DconfScheme::Initial(tinyxml2::XMLElement *pSchemeEle)
 	tinyxml2::XMLElement *pFormula = pSchemeEle->FirstChildElement(XML_SCHEME_VAR_FORMULA);
 	if (pFormula){
 		_formula = new DconfFormula(this);
+		_formula->SetImplPreset(GetImplPreset());
 		_formula->Initial(pFormula);
 	}
 

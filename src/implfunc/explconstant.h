@@ -4,10 +4,11 @@
 #include "formulaexe.h"
 
 //Explicit constant
-class ExplConstan : public FormulaExe{
+class ExplConstant : public FormulaExe{
 public:
-    ExplConstan();
-    ~ExplConstan();
+	ExplConstant();
+	ExplConstant(const std::string& sValue);
+    ~ExplConstant();
 
     std::string Run() override;
 

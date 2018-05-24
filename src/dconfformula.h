@@ -20,11 +20,13 @@ private:
     /*
      *Parse formula.pFormula is a sequence of char with a NULL-terminator.
      */
-    int Parse(const char* pFormula, FormulaExe* pParent);
+    int Parse(const char* &p, FormulaExe* pParent);
 
     FormulaExe* FormulaFactory(const char *pFormula);
 
 	FormulaExe* DotVarFactory(const char *pDotvar);
+	
+	FormulaExe* ConstFactory(const char *pConst);
 	//
 	DconfMeta* _pParent;
 };

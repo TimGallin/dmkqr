@@ -21,10 +21,8 @@ int DconfFormula::Initial(tinyxml2::XMLElement *pFormulaEle){
     if(pFormulaEle == NULL){
         return DMKQR_FAILED;
     }
-
-	Parse(pFormulaEle->GetText(), this);
-
-    return DMKQR_SUCCESS;
+	const char* pStart = pFormulaEle->GetText();
+    return Parse(pStart, this);
 }
 
 
@@ -32,8 +30,8 @@ int DconfFormula::Initial(tinyxml2::XMLElement *pFormulaEle){
 /*
  *Parse formula
  */
-int DconfFormula::Parse(const char* pFormula, FormulaExe* pParent){
-    if(pFormula == NULL){
+int DconfFormula::Parse(const char* &p, FormulaExe* pParent){
+    if(p == NULL){
         return DMKQR_FAILED;
     }
 
@@ -51,11 +49,10 @@ int DconfFormula::Parse(const char* pFormula, FormulaExe* pParent){
         sw_space
     } state = sw_loop;
 
-    const char* pRecord = pFormula;
-    const char* p = pRecord;
+    const char* pRecord = p;
+
     char ch = *p;
 
-	string sDotValue = "";
 
     while(ch != '\0'){
         switch(state){
@@ -77,6 +74,10 @@ int DconfFormula::Parse(const char* pFormula, FormulaExe* pParent){
                 }
 				else if (ch == '+'){
 					state = sw_loop;
+					break;
+				}
+				else if (ch == '\'') {
+					state = sw_const;
 					break;
 				}
 
@@ -128,18 +129,34 @@ int DconfFormula::Parse(const char* pFormula, FormulaExe* pParent){
 				break;
 			}
                 
+			case sw_const: {
+				FormulaExe* pFormula = ConstFactory(p);
+				pParent->pushback(pFormula);
+				p += pFormula->GetFormulaName().length();//Ignore  the single quote of the tail.
+
+				state = sw_loop;
+				break;
+			}
 
 			case sw_parenthesis_open:{
 				if (Parse(p, pParent->LastFormula()) != DMKQR_SUCCESS){
 					return DMKQR_FAILED;
 				}
+
+				break;
 			}
+
+
                 
             case sw_parenthesis_close:
                 break;
             default:
                 break;
         }
+		if (*p == '\0') {
+			break;
+		}
+
 		++p;
 		ch = *p;
     }
@@ -159,7 +176,7 @@ FormulaExe* DconfFormula::FormulaFactory(const char *pFormula){
     }
 
     if(dmkqr_str3_cmp(pFormula,'R','S','A')){
-		_ASSERT(GetImplPreset() == NULL);
+		_ASSERT(GetImplPreset() != NULL);
 		return(new ImplRSA(GetImplPreset()->GetRsaPubKey(), GetImplPreset()->GetRsaPriKey()));
     }
     else if(dmkqr_str3_cmp(pFormula,'D','E','S')){
@@ -185,4 +202,10 @@ FormulaExe* DconfFormula::FormulaFactory(const char *pFormula){
 FormulaExe* DconfFormula::DotVarFactory(const char *pDotvar){
 	DconfScheme* pParentScheme = static_cast<DconfScheme*>(_pParent);
 	return pParentScheme->GetVariable(pDotvar);
+}
+
+FormulaExe* DconfFormula::ConstFactory(const char *pConst) {
+	const char* pTail = strchr(pConst, '\'');
+	string sValue(pConst, pTail);
+	return new ExplConstant(sValue);
 }

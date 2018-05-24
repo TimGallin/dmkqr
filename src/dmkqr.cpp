@@ -4,10 +4,13 @@
 
 #include "implfunc\implrsa.h"
 
-int main(int argc, char *argv[]){
+void test1(const char* &p) {
+	++p;
+}
 
+int main(int argc, char *argv[]){
 	DconfManager tg;
-	if (tg.Load("qr_test.conf.xml") == 0){
+	if (tg.Load("F:\\code\\dmkqr\\bin\\qr_test.conf.xml") == 0){
 		std::string mm = tg.RunScheme("smkp");
 	}
 

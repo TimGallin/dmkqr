@@ -4,9 +4,12 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
-
+#include <Windows.h>
 #include "tinyxml2/tinyxml2.h"
 
+#define DMKQRMSG(x) MessageBox(NULL, x, L"error", 0);
+
+//XML
 #define XML_ROOT "conf"
 
 #define IMPL_PRESET_RASPUB "rsa_pubkey"

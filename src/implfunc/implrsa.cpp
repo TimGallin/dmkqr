@@ -16,6 +16,7 @@ static string PUB_FOOTER = "-----END PUBLIC KEY-----";
 
 ImplRSA::ImplRSA(const std::string& fPubKey, const std::string& fPriKey){
 	SetPubKey(fPubKey);
+	SetPriKey(fPriKey);
 }
 
 ImplRSA::~ImplRSA(){
@@ -28,18 +29,21 @@ string ImplRSA::Run(){
 
 	//Do encrypt here.
 	size_t pos1, pos2;
-	pos1 = _sPubkey.find(PRI_HEADER);
-	if (pos1 == string::npos)
-		throw runtime_error("PEM header not found");
+	pos1 = _sPrikey.find(PRI_HEADER);
+	if (pos1 == string::npos) {
+		DMKQRMSG(L"Invalid RSA cert.");
+		return "error";
+	}
 
-	pos2 = _sPubkey.find(PRI_FOOTER, pos1 + 1);
-	if (pos2 == string::npos)
-		throw runtime_error("PEM footer not found");
-
+	pos2 = _sPrikey.find(PRI_FOOTER, pos1 + 1);
+	if (pos2 == string::npos){
+		DMKQRMSG(L"Invalid RSA cert.");
+		return "error";
+	}
 	// Start position and length
 	pos1 = pos1 + PRI_HEADER.length();
 	pos2 = pos2 - pos1;
-	string keystr = _sPubkey.substr(pos1, pos2);
+	string keystr = _sPrikey.substr(pos1, pos2);
 
 	// Base64 decode, place in a ByteQueue    
 	CryptoPP::ByteQueue queue;
@@ -49,10 +53,15 @@ string ImplRSA::Run(){
 	decoder.Put((const CryptoPP::byte*)keystr.data(), keystr.length());
 	decoder.MessageEnd();
 
+#ifdef DEBUG
+
 	// Write to file for inspection
 	CryptoPP::FileSink fs("decoded-key.der");
 	queue.CopyTo(fs);
 	fs.MessageEnd();
+
+#endif // DEBUG
+
 
 
     //Do rsa encrypt
